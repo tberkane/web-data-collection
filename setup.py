@@ -10,6 +10,8 @@ setup(
         "mistralai",
         "htmldate",
         "requests",
+        "pandas",
+        "pydantic",
     ],
     author="Thomas Berkane",
     description="Automated web data collection using LLMs",

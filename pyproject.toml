@@ -18,6 +18,8 @@ dependencies = [
     "mistralai",
     "htmldate",
     "requests",
+    "pandas",
+    "pydantic",
 ]
 
 [tool.setuptools.packages.find]
