@@ -1,0 +1,6 @@
+litellm
+crawl4ai
+sentence-transformers
+mistralai
+htmldate
+requests

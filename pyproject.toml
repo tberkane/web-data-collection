@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "web_data_collection"
+version = "0.0.0"
+description = "Automated web data collection using LLMs"
+authors = [
+    {name = "Thomas Berkane"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "litellm",
+    "crawl4ai",
+    "sentence-transformers",
+    "mistralai",
+    "htmldate",
+    "requests",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["web_data_collection*"]
+
+[tool.setuptools.package-data]
+web_data_collection = ["data/*.json"] 
