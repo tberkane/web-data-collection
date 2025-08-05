@@ -6,7 +6,6 @@ setup(
     install_requires=[
         "litellm",
         "crawl4ai",
-        "sentence-transformers",
         "mistralai",
         "htmldate",
         "requests",
