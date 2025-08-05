@@ -87,12 +87,12 @@ extracted_data = await extract_data(
 ### Result Reranking
 
 ```python
-from web_data_collection import Reranker
+from web_data_collection import rerank_results_jina_api
 
-reranker = Reranker(model_name="mixedbread-ai/mxbai-rerank-xsmall-v1")
-reranking_scores = reranker.rerank_results(
+reranking_scores = rerank_results_jina_api(
     queries=[page["query"] for page in webpages],
-    documents=[page["title"] for page in webpages]
+    documents=[page["title"] for page in webpages],
+    jina_config=jina_config
 )
 ```
 
@@ -100,7 +100,6 @@ reranking_scores = reranker.rerank_results(
 
 - `litellm`: LLM provider interface
 - `crawl4ai`: Web crawling and extraction
-- `sentence-transformers`: Result reranking
 - `mistralai`: PDF OCR processing
 - `htmldate`: Date extraction from web pages
 - `requests`: HTTP requests

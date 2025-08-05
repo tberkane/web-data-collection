@@ -9,7 +9,6 @@ from typing import Dict, Generator, List, Optional, Tuple
 
 import requests
 from htmldate import find_date
-from sentence_transformers import CrossEncoder
 
 from .configs import BrightDataConfig, JinaConfig
 from .utils import timeout_function
@@ -875,69 +874,6 @@ def get_media_cloud_sources(collection: str) -> List[str]:
         sources = json.load(f)
 
     return sources[collection]
-
-
-class Reranker:
-    """
-    A class for reranking search results.
-
-    Args:
-        model_name (str): The name of the model to use for reranking.
-                         Defaults to "mixedbread-ai/mxbai-rerank-xsmall-v1".
-    """
-
-    def __init__(self, model_name="mixedbread-ai/mxbai-rerank-xsmall-v1"):
-        self.model = CrossEncoder(model_name)
-
-    def rerank_results(
-        self, queries: List[str], documents: List[str]
-    ) -> List[Dict[str, str]]:
-        """
-        Rerank documents based on their relevance to queries.
-
-        Args:
-            queries (List[str]): List of search queries.
-            documents (List[str]): List of document texts to rerank.
-
-        Returns:
-            List[Dict[str, str]]: List of reranked documents with query, text, and score.
-                                 Each dict contains:
-                                 - "query": The search query
-                                 - "text": The document text
-                                 - "score": The relevance score
-        """
-        if not documents:
-            return []
-
-        assert len(queries) == len(
-            documents
-        ), "Queries and documents must have the same length"
-
-        # Group documents by query
-        query_document_groups = {}
-        for query, document in zip(queries, documents):
-            if query not in query_document_groups:
-                query_document_groups[query] = []
-            query_document_groups[query].append(document)
-
-        rerank_results = []
-        for query, documents_for_query in query_document_groups.items():
-            # Rank all documents for this query together
-            ranked_docs = self.model.rank(
-                query, documents_for_query, return_documents=True
-            )
-
-            # Add results for this query
-            for ranked_doc in ranked_docs:
-                rerank_results.append(
-                    {
-                        "query": query,
-                        "text": ranked_doc["text"],
-                        "score": ranked_doc["score"].item(),
-                    }
-                )
-
-        return rerank_results
 
 
 def rerank_results_jina_api(

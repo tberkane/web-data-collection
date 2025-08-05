@@ -7,7 +7,6 @@ from .data_extraction import (
 from .quality_control import control_quality
 from .query_generation import generate_search_queries
 from .webpage_retrieval import (
-    Reranker,
     get_geolocation_countries,
     get_media_cloud_countries,
     get_url_date,
@@ -24,7 +23,6 @@ __all__ = [
     "generate_search_queries",
     "retrieve_webpages",
     "retrieve_webpages_streaming",
-    "Reranker",
     "rerank_results_jina_api",
     "get_geolocation_countries",
     "get_media_cloud_countries",
