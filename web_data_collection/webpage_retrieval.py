@@ -11,7 +11,7 @@ import requests
 from htmldate import find_date
 from sentence_transformers import CrossEncoder
 
-from .configs import BrightDataConfig
+from .configs import BrightDataConfig, JinaConfig
 from .utils import timeout_function
 
 # Configure logging
@@ -938,6 +938,69 @@ class Reranker:
                 )
 
         return rerank_results
+
+
+def rerank_results_jina_api(
+    queries: List[str], documents: List[str], jina_config: JinaConfig
+) -> List[Dict[str, str]]:
+    """
+    Rerank documents based on their relevance to queries using the Jina API.
+
+    Args:
+        queries (List[str]): List of search queries.
+        documents (List[str]): List of document texts to rerank.
+
+    Returns:
+        List[Dict[str, str]]: List of reranked documents with query, text, and score.
+                                Each dict contains:
+                                - "query": The search query
+                                - "text": The document text
+                                - "score": The relevance score
+    """
+    if not documents:
+        return []
+
+    assert len(queries) == len(
+        documents
+    ), "Queries and documents must have the same length"
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {jina_config.api_key}",
+    }
+
+    # Group documents by query
+    query_document_groups = {}
+    for query, document in zip(queries, documents):
+        if query not in query_document_groups:
+            query_document_groups[query] = []
+        query_document_groups[query].append(document)
+
+    rerank_results = []
+    for query, documents_for_query in query_document_groups.items():
+        # Rank all documents for this query together
+        data = {
+            "model": jina_config.model,
+            "query": query,
+            "top_n": len(documents_for_query),
+            "documents": documents_for_query,
+            "return_documents": True,
+        }
+        response = requests.post(jina_config.base_url, headers=headers, json=data)
+        response.raise_for_status()
+        ranked_docs = response.json()
+
+        # Add results for this query
+        for ranked_doc in ranked_docs["results"]:
+            rerank_results.append(
+                {
+                    "query": query,
+                    "text": ranked_doc["document"]["text"],
+                    "score": ranked_doc["relevance_score"],
+                }
+            )
+
+    return rerank_results
 
 
 def get_media_cloud_countries() -> List[str]:

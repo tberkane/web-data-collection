@@ -63,3 +63,27 @@ class MistralOCRConfig:
             api_key: Mistral OCR API key
         """
         self.api_key = api_key
+
+
+class JinaConfig:
+    """
+    Configuration class for Jina Reranker API settings.
+    """
+
+    def __init__(
+        self,
+        api_key: str,
+        model: str = "jina-reranker-v2-base-multilingual",
+        base_url: str = "https://api.jina.ai/v1/rerank",
+    ):
+        """
+        Initialize Jina configuration.
+
+        Args:
+            api_key: Jina API key
+            model: Jina model to use
+            base_url: Jina base URL
+        """
+        self.model = model
+        self.api_key = api_key
+        self.base_url = base_url
