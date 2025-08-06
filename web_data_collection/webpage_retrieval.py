@@ -971,11 +971,15 @@ def get_url_date(url: str) -> str:
     Returns:
         str: The extracted date string, or None if extraction fails or times out
     """
-    date = timeout_function(
-        find_date,
-        args=(url,),
-        kwargs={"extensive_search": True},
-        timeout=5,
-        default_value=None,
-    )
-    return date
+    try:
+        date = timeout_function(
+            find_date,
+            args=(url,),
+            kwargs={"extensive_search": True},
+            timeout=5,
+            default_value=None,
+        )
+        return date
+    except Exception as e:
+        logger.warning(f"Error extracting date from {url}: {e}")
+        return None
