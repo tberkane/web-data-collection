@@ -29,6 +29,7 @@ def generate_search_queries(
 
     # Generate prompt based on whether variables are provided
     if variable_names:
+        variable_names = [n.lower().replace(" ", "_") for n in variable_names]
         prompt = GENERATE_QUERIES_WITH_VARIABLES_PROMPT.format(
             variable_names=variable_names,
             num_queries=num_queries,
