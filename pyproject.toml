@@ -14,7 +14,7 @@ requires-python = ">=3.8"
 dependencies = [
     "litellm",
     "crawl4ai",
-    "mistralai",
+    "mistralai>=1.0.0,<2.0.0",
     "htmldate",
     "requests",
     "pandas",
